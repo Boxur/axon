@@ -31,9 +31,9 @@ namespace axon {
 
     std::vector<double> Compute(const std::vector<double>& inputs);
 
-    void SaveNetwork(const std::string& path);
+    void SaveNetworkWeights(const std::string& path);
 
-    bool LoadNetwork(const std::string& path);
+    bool LoadNetworkWeights(const std::string& path);
 
     void Test();
 

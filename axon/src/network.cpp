@@ -1,6 +1,9 @@
 #include "network.hpp"
 #include "log.hpp"
+#include <cstdlib>
+#include <functional>
 #include <iostream>
+#include <vector>
 
 namespace axon
 {
@@ -8,8 +11,10 @@ namespace axon
   {
 
     learningRate_ = learningRate;
-    int layers = data->GetNumberOfLayers();
-    std::vector<int> layout = data->GetNetworkLayout();
+    const int layers = data->GetNumberOfLayers();
+    const std::vector<int>& layout = data->GetNetworkLayout();
+    const std::vector<std::function<double(double)>>& activationFunctions = data->GetActivationFunctions();
+    const std::vector<std::function<double(double)>>& activationFunctionDerivatives = data->GetActivationFunctionDerivatives();
     biggestLayer_ = 0;
     for(int i=0;i<layout.size();i++)
     {
@@ -17,11 +22,10 @@ namespace axon
         biggestLayer_ = layout[i];
     }
     layers_.resize(layers-1);
-    for (int i = 0; i < layers - 2; i++)
+    for (int i = 0; i < layers - 1; i++)
     {
-      layers_[i] = std::make_unique<Layer>(layout[i],layout[i+1],Layer::Type::Hidden);
+      layers_[i] = std::make_unique<Layer>(layout[i],layout[i+1],activationFunctions[i],activationFunctionDerivatives[i]);
     }
-    layers_[layers-2] = std::make_unique<Layer>(layout[layers-2],layout[layers-1],Layer::Type::Classification);
     inputCount_ = layout[0];
     outputCount_ = layout[layers - 1];
     layerCount_ = layers - 1;
@@ -70,33 +74,23 @@ namespace axon
     return finalError;
   }
 
-  void Network::SaveNetwork(const std::string& path)
+  void Network::SaveNetworkWeights(const std::string& path)
   {
     std::fstream file;
     file.open(path, std::ios::out | std::ios::binary);
-    file.write(reinterpret_cast<char*>(&layerCount_), sizeof(int));
-    file.write(reinterpret_cast<const char*> (data_->GetNetworkLayout().data()), sizeof(int) * (layerCount_ + 1));
     for (int i = 0; i < layerCount_; i++)
       layers_[i]->SaveLayer(file);
   }
 
-  bool Network::LoadNetwork(const std::string& path)
+  bool Network::LoadNetworkWeights(const std::string& path)
   {
     std::fstream file;
     file.open(path, std::ios::in | std::ios::binary);
     if (!file.is_open()) return false;
-    file.read(reinterpret_cast<char*>(&layerCount_), sizeof(int));
-    std::vector<int> layout(layerCount_+1);
-    layers_.resize(layerCount_);
-    file.read(reinterpret_cast<char*>(layout.data()), sizeof(int) * (layerCount_ + 1));
-
-    for (int i = 0; i < layerCount_ - 1; i++)
+    for (int i = 0; i < layerCount_; i++)
     {
-      layers_[i] = std::make_unique<Layer>(layout[i],layout[i+1],Layer::Type::Hidden);
       layers_[i]->LoadLayer(file);
     }
-    layers_[layerCount_ - 1] = std::make_unique<Layer>(layout[layerCount_-1],layout[layerCount_],Layer::Type::Classification);
-    layers_[layerCount_ - 1]->LoadLayer(file);
     return true;
   }
 

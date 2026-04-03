@@ -1,15 +1,18 @@
 #pragma once
 #include "network_data.hpp"
 #include <fstream>
+#include <functional>
 #include <stdlib.h>
 #include <vector>
 class MnistData : public axon::NetworkData
 {
 private:
 	// 11 outputs for the 10 digits and noise
-	std::vector<int> networkLayout_;
-	int numberOfLayers_ = 4;
-	int trainingSetCount_ = 60000;
+	const std::vector<int> networkLayout_;
+	const int numberOfLayers_ = 4;
+	const int trainingSetCount_ = 60000;
+  const std::vector<std::function<double(double)>> activationFunctions_;
+  const std::vector<std::function<double(double)>> activationFunctionDerivatives_;
 
 	std::vector<double> trainingInputArray_;
 	std::vector<double> trainingOutputArray_;
@@ -38,7 +41,11 @@ public:
 
 	bool LoadTestData() override;
 
-	std::vector<int> GetNetworkLayout() override;
+  const int& GetNumberOfLayers() const override;
 
-	int GetNumberOfLayers() override;
+  const std::vector<int>& GetNetworkLayout() const override;
+
+  const std::vector<std::function<double(double)>>& GetActivationFunctions() const override;
+
+  const std::vector<std::function<double(double)>>& GetActivationFunctionDerivatives() const override;
 };

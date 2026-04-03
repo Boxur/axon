@@ -1,5 +1,6 @@
 #pragma once
 #include <fstream>
+#include <functional>
 #include <vector>
 
 namespace axon
@@ -13,14 +14,6 @@ namespace axon
       Multiplication
     };
 
-    enum class Type
-    {
-      Hidden,
-      Classification,
-      Regression
-    };
-    
-
   private:
     int inputCount_;
     int outputCount_;
@@ -29,18 +22,15 @@ namespace axon
     std::vector<double> weights_;
     std::vector<double> deltas_;
 
-    Type type_;
+    const std::function<double(double)> activationFunction_;
+    const std::function<double(double)> activationFunctionDerivative_;
 
   public:
-    Layer(int inputs, int outputs, Type type);
+    Layer(int inputs, int outputs, std::function<double(double)> activationFunction, std::function<double(double)> activationFunctionDerivative);
 
     ~Layer();
 
     void InitWeights();
-
-    double ActivationFunction(double x) const;
-
-    double ActivationFunctionDerivative(double x) const;
 
     std::vector<double> Compute(const std::vector<double> &inputs);
 

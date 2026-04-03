@@ -1,9 +1,33 @@
 #include "mnist_data.hpp"
 #include "log.hpp"
+#include <functional>
 #include <iostream>
 #include <vector>
 
-MnistData::MnistData() : networkLayout_({784, 30, 30, 11}) 
+static double leakyRelu(double x)
+{
+  return ((x < 0) ? x / 10 : x);
+}
+
+static double leakyReluDerivative(double x)
+{
+  return ((x<0)? 0.1:1);
+}
+
+static double sigmoidApprox(double x)
+{
+  return ((x<-2.5) ? 0 : ((x<2.5) ? 0.2 * x+0.5 : 1));
+}
+
+static double sigmoidApproxDerivative(double x)
+{
+  return ((x<-2.5) ? 0.05 : ((x<2.5) ? 0.2 : 0.05));
+}
+
+MnistData::MnistData() :
+  networkLayout_({784, 30, 30, 11}),
+  activationFunctions_({leakyRelu,leakyRelu,leakyRelu,sigmoidApprox}),
+  activationFunctionDerivatives_({leakyReluDerivative,leakyReluDerivative,leakyReluDerivative,sigmoidApproxDerivative})
 { 
 	trainingInputArray_.resize(784);
 	trainingOutputArray_.resize(11);
@@ -27,8 +51,6 @@ bool MnistData::GetNextTrainingData(std::vector<double> &inputs, std::vector<dou
 		axon::Log(axon::Log.error,"The input vector is too small");
 	if(outputs.size()<11)
 		axon::Log(axon::Log.error,"The output vector is too small");
-	//inputs.resize(784);
-	//outputs.resize(11);
 	if (rand() % 15 == 0)
 	{
 		for (int i = 0; i < 784; i++)
@@ -168,12 +190,22 @@ bool MnistData::LoadTestData()
 	return true;
 }
 
-std::vector<int> MnistData::GetNetworkLayout()
+const std::vector<int>& MnistData::GetNetworkLayout() const
 {
 	return networkLayout_;
 }
 
-int MnistData::GetNumberOfLayers()
+const int& MnistData::GetNumberOfLayers() const
 {
 	return numberOfLayers_;
+}
+
+const std::vector<std::function<double(double)>>& MnistData::GetActivationFunctions() const
+{
+  return activationFunctions_;
+}
+
+const std::vector<std::function<double(double)>>& MnistData::GetActivationFunctionDerivatives() const
+{
+  return activationFunctionDerivatives_;
 }
