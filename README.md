@@ -1,4 +1,4 @@
-# Neural Network
+# axon
 A neural network implemented from scratch designed in a way to make using it straight forward
 ## Usage
 As shown by the MNIST example in neural_network.ccp you need to create a class inheriting from the Data class.
