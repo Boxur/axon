@@ -2,11 +2,12 @@
 #include "network_data.hpp"
 #include <fstream>
 #include <stdlib.h>
-class MnistData : public NetworkData
+#include <vector>
+class MnistData : public axon::NetworkData
 {
 private:
 	// 11 outputs for the 10 digits and noise
-	std::initializer_list<int> networkLayout_ = {784, 30, 30, 11};
+	std::vector<int> networkLayout_;
 	int numberOfLayers_ = 4;
 	int trainingSetCount_ = 60000;
 
@@ -37,7 +38,7 @@ public:
 
 	bool LoadTestData() override;
 
-	std::initializer_list<int> GetNetworkLayout() override;
+	std::vector<int> GetNetworkLayout() override;
 
 	int GetNumberOfLayers() override;
 };

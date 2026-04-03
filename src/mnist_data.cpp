@@ -1,8 +1,9 @@
 #include "mnist_data.hpp"
 #include "log.hpp"
 #include <iostream>
+#include <vector>
 
-MnistData::MnistData()
+MnistData::MnistData() : networkLayout_({784, 30, 30, 11}) 
 { 
 	trainingInputArray_.resize(784);
 	trainingOutputArray_.resize(11);
@@ -23,9 +24,9 @@ bool MnistData::GetNextTrainingData(std::vector<double> &inputs, std::vector<dou
 		return false;
 	}
 	if(inputs.size()<784)
-		Log(Log.error,"The input vector is too small");
+		axon::Log(axon::Log.error,"The input vector is too small");
 	if(outputs.size()<11)
-		Log(Log.error,"The output vector is too small");
+		axon::Log(axon::Log.error,"The output vector is too small");
 	//inputs.resize(784);
 	//outputs.resize(11);
 	if (rand() % 15 == 0)
@@ -167,7 +168,7 @@ bool MnistData::LoadTestData()
 	return true;
 }
 
-std::initializer_list<int> MnistData::GetNetworkLayout()
+std::vector<int> MnistData::GetNetworkLayout()
 {
 	return networkLayout_;
 }
