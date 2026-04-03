@@ -3,3 +3,4 @@ out/
 network.nn
 neural_network
 perf.data
+compile_commands.json
