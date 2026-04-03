@@ -1,5 +1,5 @@
 .vim.pred
-build/
+out/
 network.nn
 neural_network
 perf.data

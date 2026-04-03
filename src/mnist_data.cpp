@@ -1,4 +1,5 @@
 #include "mnist_data.hpp"
+#include "log.hpp"
 #include <iostream>
 
 MnistData::MnistData()
@@ -139,9 +140,9 @@ bool MnistData::LoadTrainingData()
 {
 	trainingInputs_.close();
 	trainingOutputs_.close();
-    trainingInputs_.open("data/train-images.ubyte", std::ios::in|std::ios::binary);
+    trainingInputs_.open("Assets/data/train-images.ubyte", std::ios::in|std::ios::binary);
 	if (!trainingInputs_) return false;
- 	trainingOutputs_.open("data/train-labels.ubyte", std::ios::in|std::ios::binary);
+ 	trainingOutputs_.open("Assets/data/train-labels.ubyte", std::ios::in|std::ios::binary);
 	if (!trainingOutputs_) return false;
 
 	char* skip = new char[16];
@@ -155,9 +156,9 @@ bool MnistData::LoadTestData()
 {
 	testInputs_.close();
 	testOutputs_.close();
-	testInputs_.open("data/test-images.ubyte", std::ios::in|std::ios::binary);
+	testInputs_.open("Assets/data/test-images.ubyte", std::ios::in|std::ios::binary);
 	if(!testInputs_) return false;
-	testOutputs_.open("data/test-labels.ubyte", std::ios::in|std::ios::binary);
+	testOutputs_.open("Assets/data/test-labels.ubyte", std::ios::in|std::ios::binary);
 	if(!testOutputs_) return false;
 	char* skip = new char[16];
 	testInputs_.read(skip, 16);

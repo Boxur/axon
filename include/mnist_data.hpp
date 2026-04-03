@@ -1,6 +1,5 @@
 #pragma once
 #include "network_data.hpp"
-#include "log.hpp"
 #include <fstream>
 #include <stdlib.h>
 class MnistData : public NetworkData

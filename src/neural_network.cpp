@@ -8,10 +8,10 @@ int main()
 	//this is a comment
 	std::shared_ptr<NetworkData> data = std::make_shared<MnistData>();
 	Network network(data, 0.000001f);
-	network.LoadNetwork("network.nn");
+	network.LoadNetwork("Assets/network.nn");
 	Log.Level(Log.error | Log.info);
 	network.Train(10);
 	network.Test();
-	network.SaveNetwork("network.nn");
+	network.SaveNetwork("Assets/network.nn");
 }
 
