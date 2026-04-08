@@ -1,5 +1,6 @@
 #include "mnist_data.hpp"
 #include "log.hpp"
+#include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <vector>
@@ -28,7 +29,8 @@ MnistData::MnistData() :
   networkLayout_({784, 30, 30, 11}),
   activationFunctions_({leakyRelu,leakyRelu,leakyRelu,sigmoidApprox}),
   activationFunctionDerivatives_({leakyReluDerivative,leakyReluDerivative,leakyReluDerivative,sigmoidApproxDerivative})
-{ 
+{
+  skip_ = new char[16];
 	trainingInputArray_.resize(784);
 	trainingOutputArray_.resize(11);
 	testInputArray_.resize(784);
@@ -39,6 +41,7 @@ MnistData::~MnistData()
 {
 	trainingInputs_.close();
 	trainingOutputs_.close();
+  delete[] skip_;
 }
 bool MnistData::GetNextTrainingData(std::vector<double> &inputs, std::vector<double> &outputs)
 {
@@ -168,10 +171,8 @@ bool MnistData::LoadTrainingData()
  	trainingOutputs_.open("Assets/data/train-labels.ubyte", std::ios::in|std::ios::binary);
 	if (!trainingOutputs_) return false;
 
-	char* skip = new char[16];
-	trainingInputs_.read(skip, 16);
-	trainingOutputs_.read(skip, 8);
-	delete[] skip;
+	trainingInputs_.read(skip_, 16);
+	trainingOutputs_.read(skip_, 8);
 	return true;
 }
 
@@ -183,10 +184,8 @@ bool MnistData::LoadTestData()
 	if(!testInputs_) return false;
 	testOutputs_.open("Assets/data/test-labels.ubyte", std::ios::in|std::ios::binary);
 	if(!testOutputs_) return false;
-	char* skip = new char[16];
-	testInputs_.read(skip, 16);
-	testOutputs_.read(skip, 8);
-	delete[] skip;
+	testInputs_.read(skip_, 16);
+	testOutputs_.read(skip_, 8);
 	return true;
 }
 
