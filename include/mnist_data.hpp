@@ -6,7 +6,7 @@
 #include <vector>
 class MnistData : public axon::NetworkData {
 private:
-  char* skip_;
+  char *skip_;
   // 11 outputs for the 10 digits and noise
   const std::vector<int> networkLayout_;
   const int numberOfLayers_ = 4;
