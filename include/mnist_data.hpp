@@ -9,8 +9,8 @@ private:
   char *skip_;
   // 11 outputs for the 10 digits and noise
   const std::vector<int> networkLayout_;
-  const int numberOfLayers_ = 4;
-  const int trainingSetCount_ = 60000;
+  static constexpr int numberOfLayers_ = 4;
+  static constexpr int trainingSetCount_ = 60000;
   const std::vector<std::function<double(double)>> activationFunctions_;
   const std::vector<std::function<double(double)>>
       activationFunctionDerivatives_;
@@ -46,9 +46,9 @@ public:
 
   bool LoadTestData() override;
 
-  const int &GetNumberOfLayers() const override;
+  constexpr const int GetNumberOfLayers() const override;
 
-  const std::vector<int> &GetNetworkLayout() const override;
+  const std::vector<int> GetNetworkLayout() const override;
 
   const std::vector<std::function<double(double)>> &
   GetActivationFunctions() const override;

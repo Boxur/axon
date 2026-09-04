@@ -1,35 +1,15 @@
 #include "network.hpp"
-#include "log.hpp"
+#include "logger.hpp"
 #include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <vector>
 
 namespace axon {
-Network::Network(std::shared_ptr<NetworkData> data, double learningRate) {
+Network::Network(double learningRate) {
 
   learningRate_ = learningRate;
-  const int layers = data->GetNumberOfLayers();
-  const std::vector<int> &layout = data->GetNetworkLayout();
-  const std::vector<std::function<double(double)>> &activationFunctions =
-      data->GetActivationFunctions();
-  const std::vector<std::function<double(double)>>
-      &activationFunctionDerivatives = data->GetActivationFunctionDerivatives();
   biggestLayer_ = 0;
-  for (int i = 0; i < layout.size(); i++) {
-    if (layout[i] > biggestLayer_)
-      biggestLayer_ = layout[i];
-  }
-  layers_.resize(layers - 1);
-  for (int i = 0; i < layers - 1; i++) {
-    layers_[i] = std::make_unique<Layer>(layout[i], layout[i + 1],
-                                         activationFunctions[i],
-                                         activationFunctionDerivatives[i]);
-  }
-  inputCount_ = layout[0];
-  outputCount_ = layout[layers - 1];
-  layerCount_ = layers - 1;
-  data_ = data;
   precission_ = 0;
   srand((int)time(NULL));
 }
@@ -45,7 +25,7 @@ void Network::Train(int epochs) {
 void Network::Train() {
   precission_ = TestNetwork_();
 
-  Log(std::to_string(precission_));
+  logger::Logger::Log(std::to_string(precission_));
   std::vector<double> inputs(biggestLayer_);
   std::vector<double> outputs(biggestLayer_);
   data_->LoadTrainingData();
@@ -104,7 +84,8 @@ std::vector<double> Network::Compute(const std::vector<double> &inputs) {
 void Network::Test() {
   double prec = TestNetwork_();
 
-  Log(std::to_string(prec) + " " + std::to_string(learningRate_));
+  logger::Logger::Log(std::to_string(prec) + " " +
+                      std::to_string(learningRate_));
 }
 
 void Network::SetLearningRate(double lr) { learningRate_ = lr; }
@@ -113,7 +94,8 @@ double Network::TestNetwork_() {
   std::vector<double> inputs(biggestLayer_);
   std::vector<double> outputs(biggestLayer_);
   if (!data_->LoadTestData())
-    Log(Log.error, "Failed to load test data");
+    logger::Logger::Log(logger::Logger::LogLevel::error,
+                        "Failed to load test data");
   double error = 0;
   int i = 0;
   while (data_->GetNextTestData(inputs, outputs)) {

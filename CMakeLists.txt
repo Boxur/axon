@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 
 project("axon")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_STANDARD			23)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS		OFF)
@@ -12,11 +14,14 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+add_subdirectory(external/logger)
+
 add_library(axon STATIC
-  axon/src/log.cpp
   axon/src/layer.cpp
   axon/src/network.cpp
 )
+
+target_link_libraries(axon logger)
 
 target_include_directories(axon PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/axon/include")
 

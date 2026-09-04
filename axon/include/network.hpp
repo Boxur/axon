@@ -15,14 +15,38 @@ private:
   int layerCount_;
   int biggestLayer_;
   std::vector<std::unique_ptr<Layer>> layers_;
-  std::shared_ptr<NetworkData> data_;
+  std::unique_ptr<NetworkData> data_;
 
   double precission_;
 
 public:
-  Network(std::shared_ptr<NetworkData> data, double learningRate);
+  Network(double learningRate);
 
   ~Network();
+
+  template <class T> void Data() {
+    data_ = std::make_unique<T>();
+    const int layers = data_->GetNumberOfLayers();
+    const std::vector<int> &layout = data_->GetNetworkLayout();
+    const std::vector<std::function<double(double)>> &activationFunctions =
+        data_->GetActivationFunctions();
+    const std::vector<std::function<double(double)>>
+        &activationFunctionDerivatives =
+            data_->GetActivationFunctionDerivatives();
+    for (int i = 0; i < layout.size(); i++) {
+      if (layout[i] > biggestLayer_)
+        biggestLayer_ = layout[i];
+    }
+    layers_.resize(layers - 1);
+    for (int i = 0; i < layers - 1; i++) {
+      layers_[i] = std::make_unique<Layer>(layout[i], layout[i + 1],
+                                           activationFunctions[i],
+                                           activationFunctionDerivatives[i]);
+    }
+    inputCount_ = layout[0];
+    outputCount_ = layout[layers - 1];
+    layerCount_ = layers - 1;
+  }
 
   void Train(int epochs);
 

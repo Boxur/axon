@@ -1,5 +1,5 @@
 #include "mnist_data.hpp"
-#include "log.hpp"
+#include "logger.hpp"
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -43,9 +43,11 @@ bool MnistData::GetNextTrainingData(std::vector<double> &inputs,
     return false;
   }
   if (inputs.size() < 784)
-    axon::Log(axon::Log.error, "The input vector is too small");
+    logger::Logger::Log(logger::Logger::LogLevel::error,
+                        "The input vector is too small");
   if (outputs.size() < 11)
-    axon::Log(axon::Log.error, "The output vector is too small");
+    logger::Logger::Log(logger::Logger::LogLevel::error,
+                        "The output vector is too small");
   if (rand() % 15 == 0) {
     for (int i = 0; i < 784; i++) {
       inputs[i] = (double)(rand() % 256) / 255.0;
@@ -166,11 +168,13 @@ bool MnistData::LoadTestData() {
   return true;
 }
 
-const std::vector<int> &MnistData::GetNetworkLayout() const {
+const std::vector<int> MnistData::GetNetworkLayout() const {
   return networkLayout_;
 }
 
-const int &MnistData::GetNumberOfLayers() const { return numberOfLayers_; }
+constexpr const int MnistData::GetNumberOfLayers() const {
+  return numberOfLayers_;
+}
 
 const std::vector<std::function<double(double)>> &
 MnistData::GetActivationFunctions() const {

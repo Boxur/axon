@@ -18,8 +18,8 @@ public:
   virtual bool LoadTrainingData() = 0;
   virtual bool LoadTestData() = 0;
 
-  const virtual std::vector<int> &GetNetworkLayout() const = 0;
-  const virtual int &GetNumberOfLayers() const = 0;
+  [[nodiscard]] const virtual std::vector<int> GetNetworkLayout() const = 0;
+  [[nodiscard]] const inline virtual int GetNumberOfLayers() const = 0;
 
   const virtual std::vector<std::function<double(double)>> &
   GetActivationFunctions() const = 0;
