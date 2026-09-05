@@ -21,6 +21,6 @@ add_library(axon STATIC
   src/network.cpp
 )
 
-target_link_libraries(axon PUBLIC logger)
-
 target_include_directories(axon PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+target_link_libraries(axon PUBLIC logger)
