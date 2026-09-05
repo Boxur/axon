@@ -3,14 +3,14 @@
 #include <functional>
 
 namespace axon {
-Layer::Layer(int inputs, int outputs,
+Layer::Layer(int inputs, int outputs, int buffer_size,
              std::function<double(double)> activationFunction,
              std::function<double(double)> activationFunctionDerivative)
     : inputCount_(inputs), outputCount_(outputs),
       activationFunction_(activationFunction),
       activationFunctionDerivative_(activationFunctionDerivative) {
   srand(time(NULL));
-  outputs_.resize(outputs);
+  outputs_.resize(buffer_size);
   biases_.resize(outputs);
   weights_.resize(inputs * outputs);
   deltas_.resize(outputs);
@@ -32,19 +32,16 @@ void Layer::InitWeights() {
   }
 }
 
-std::vector<double> Layer::Compute(const std::vector<double> &inputs) {
+const std::vector<double> &Layer::Compute(const std::vector<double> &inputs) {
   double activation;
   for (int i = 0; i < outputCount_; i++) {
     activation = biases_[i];
     for (int j = 0; j < inputCount_; j++) {
-      assert(i < outputs_.size());
-      assert(j * outputCount_ + i < weights_.size());
       activation += inputs[j] * weights_[j * outputCount_ + i];
     }
     outputs_[i] = activationFunction_(activation);
   }
   return outputs_;
-  ;
 }
 
 void Layer::Delta(std::vector<double> &output, DeltaMode mode) {

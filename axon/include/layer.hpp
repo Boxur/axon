@@ -20,7 +20,7 @@ private:
   const std::function<double(double)> activationFunctionDerivative_;
 
 public:
-  Layer(int inputs, int outputs,
+  Layer(int inputs, int outputs, int buffer_size,
         std::function<double(double)> activationFunction,
         std::function<double(double)> activationFunctionDerivative);
 
@@ -28,7 +28,7 @@ public:
 
   void InitWeights();
 
-  std::vector<double> Compute(const std::vector<double> &inputs);
+  const std::vector<double> &Compute(const std::vector<double> &inputs);
 
   void Delta(std::vector<double> &output, DeltaMode mode);
 

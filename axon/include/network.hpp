@@ -33,15 +33,12 @@ public:
     const std::vector<std::function<double(double)>>
         &activationFunctionDerivatives =
             data_->GetActivationFunctionDerivatives();
-    for (int i = 0; i < layout.size(); i++) {
-      if (layout[i] > biggestLayer_)
-        biggestLayer_ = layout[i];
-    }
+    biggestLayer_ = *std::max_element(layout.begin(), layout.end());
     layers_.resize(layers - 1);
     for (int i = 0; i < layers - 1; i++) {
-      layers_[i] = std::make_unique<Layer>(layout[i], layout[i + 1],
-                                           activationFunctions[i],
-                                           activationFunctionDerivatives[i]);
+      layers_[i] = std::make_unique<Layer>(
+          layout[i], layout[i + 1], biggestLayer_, activationFunctions[i],
+          activationFunctionDerivatives[i]);
     }
     inputCount_ = layout[0];
     outputCount_ = layout[layers - 1];
@@ -52,7 +49,7 @@ public:
 
   void Train();
 
-  std::vector<double> Compute(const std::vector<double> &inputs);
+  std::vector<double> Compute(std::vector<double> &&inputs);
 
   void SaveNetworkWeights(const std::string &path);
 
