@@ -2,6 +2,7 @@
 #include "layer.hpp"
 #include "network_data.hpp"
 
+#include <algorithm>
 #include <assert.h>
 #include <memory>
 #include <vector>

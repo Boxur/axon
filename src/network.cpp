@@ -1,7 +1,6 @@
 #include "network.hpp"
 #include "logger.hpp"
 #include <cstdlib>
-#include <functional>
 #include <iostream>
 #include <vector>
 

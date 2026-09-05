@@ -14,13 +14,11 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-add_subdirectory(external/logger)
+add_subdirectory(.. ${CMAKE_BINARY_DIR}/axon)
 
-add_library(axon STATIC
-  src/layer.cpp
-  src/network.cpp
-)
+add_executable(exec src/neural_network.cpp src/mnist_data.cpp)
+target_include_directories(exec PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-target_link_libraries(axon logger)
+target_link_libraries(exec PUBLIC axon)
 
-target_include_directories(axon PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+file(COPY Assets DESTINATION ${CMAKE_BINARY_DIR})
