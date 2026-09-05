@@ -5,6 +5,7 @@
 namespace axon {
 class NetworkData {
 public:
+  virtual ~NetworkData() = default;
   virtual bool GetNextTrainingData(std::vector<double> &inputs,
                                    std::vector<double> &outputs) = 0;
   virtual void GetSameTrainingData(std::vector<double> &inputs,
