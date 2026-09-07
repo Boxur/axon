@@ -50,7 +50,7 @@ public:
 
   void Train();
 
-  std::vector<double> Compute(std::vector<double> &&inputs);
+  void Compute(std::vector<double> &inputs);
 
   void SaveNetworkWeights(const std::string &path);
 

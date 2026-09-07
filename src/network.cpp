@@ -66,15 +66,14 @@ bool Network::LoadNetworkWeights(const std::string &path) {
 
 void Network::Train_(std::vector<double> &inputs,
                      std::vector<double> &outputs) {
-  inputs = Compute(std::move(inputs));
+  Compute(inputs);
   Backpropagation_(inputs, outputs);
 }
 
-std::vector<double> Network::Compute(std::vector<double> &&inputs) {
+void Network::Compute(std::vector<double> &inputs) {
   for (int j = 0; j < layerCount_; j++) {
     inputs = layers_[j]->Compute(inputs);
   }
-  return std::move(inputs);
 }
 
 void Network::Test() {
@@ -95,7 +94,7 @@ double Network::TestNetwork_() {
   double error = 0;
   int i = 0;
   while (data_->GetNextTestData(inputs, outputs)) {
-    inputs = Compute(std::move(inputs));
+    Compute(inputs);
     error += CalculateError_(inputs, outputs, outputCount_);
     i++;
   }

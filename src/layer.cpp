@@ -34,13 +34,15 @@ void Layer::InitWeights() {
 
 const std::vector<double> &Layer::Compute(const std::vector<double> &inputs) {
   double activation;
-  for (int i = 0; i < outputCount_; i++) {
-    activation = biases_[i];
-    for (int j = 0; j < inputCount_; j++) {
-      activation += inputs[j] * weights_[j * outputCount_ + i];
+  for (int i = 0; i < outputCount_; i++)
+    outputs_[i] = biases_[i];
+  for (int i = 0; i < inputCount_; i++) {
+    for (int j = 0; j < outputCount_; j++) {
+      outputs_[j] += inputs[i] * weights_[j + outputCount_ * i];
     }
-    outputs_[i] = activationFunction_(activation);
   }
+  for (int i = 0; i < outputCount_; i++)
+    outputs_[i] = activationFunction_(outputs_[i]);
   return outputs_;
 }
 
