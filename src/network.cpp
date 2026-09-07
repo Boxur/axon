@@ -50,7 +50,7 @@ void Network::SaveNetworkWeights(const std::string &path) {
   std::fstream file;
   file.open(path, std::ios::out | std::ios::binary);
   for (int i = 0; i < layerCount_; i++)
-    layers_[i]->SaveLayer(file);
+    layers_[i].SaveLayer(file);
 }
 
 bool Network::LoadNetworkWeights(const std::string &path) {
@@ -59,7 +59,7 @@ bool Network::LoadNetworkWeights(const std::string &path) {
   if (!file.is_open())
     return false;
   for (int i = 0; i < layerCount_; i++) {
-    layers_[i]->LoadLayer(file);
+    layers_[i].LoadLayer(file);
   }
   return true;
 }
@@ -70,10 +70,11 @@ void Network::Train_(std::vector<double> &inputs,
   Backpropagation_(inputs, outputs);
 }
 
-void Network::Compute(std::vector<double> &inputs) {
+std::vector<double> &Network::Compute(std::vector<double> &inputs) {
   for (int j = 0; j < layerCount_; j++) {
-    inputs = layers_[j]->Compute(inputs);
+    inputs = layers_[j].Compute(inputs);
   }
+  return inputs;
 }
 
 void Network::Test() {
@@ -94,8 +95,7 @@ double Network::TestNetwork_() {
   double error = 0;
   int i = 0;
   while (data_->GetNextTestData(inputs, outputs)) {
-    Compute(inputs);
-    error += CalculateError_(inputs, outputs, outputCount_);
+    error += CalculateError_(Compute(inputs), outputs, outputCount_);
     i++;
   }
   return error / i;
@@ -104,15 +104,15 @@ double Network::TestNetwork_() {
 void Network::Backpropagation_(std::vector<double> &inputs,
                                std::vector<double> &outputs) {
 
-  layers_[layerCount_ - 1]->Delta(outputs, Layer::DeltaMode::Diffrence);
+  layers_[layerCount_ - 1].Delta(outputs, Layer::DeltaMode::Diffrence);
   for (int i = layerCount_ - 2; i >= 0; i--) {
-    layers_[i]->Delta(outputs, Layer::DeltaMode::Multiplication);
+    layers_[i].Delta(outputs, Layer::DeltaMode::Multiplication);
   }
 
   for (int i = layerCount_ - 1; i >= 1; i--) {
-    layers_[i]->Descent(layers_[i - 1]->GetOutputs(), learningRate_);
+    layers_[i].Descent(layers_[i - 1].GetOutputs(), learningRate_);
   }
   data_->GetSameTrainingData(inputs, outputs);
-  layers_[0]->Descent(inputs, learningRate_);
+  layers_[0].Descent(inputs, learningRate_);
 }
 } // namespace axon

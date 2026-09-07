@@ -15,7 +15,7 @@ private:
   int outputCount_;
   int layerCount_;
   int biggestLayer_;
-  std::vector<std::unique_ptr<Layer>> layers_;
+  std::vector<Layer> layers_;
   std::unique_ptr<NetworkData> data_;
 
   double precission_;
@@ -35,11 +35,11 @@ public:
         &activationFunctionDerivatives =
             data_->GetActivationFunctionDerivatives();
     biggestLayer_ = *std::max_element(layout.begin(), layout.end());
-    layers_.resize(layers - 1);
+    layers_.clear();
     for (int i = 0; i < layers - 1; i++) {
-      layers_[i] = std::make_unique<Layer>(
-          layout[i], layout[i + 1], biggestLayer_, activationFunctions[i],
-          activationFunctionDerivatives[i]);
+      layers_.push_back(Layer(layout[i], layout[i + 1], biggestLayer_,
+                              activationFunctions[i],
+                              activationFunctionDerivatives[i]));
     }
     inputCount_ = layout[0];
     outputCount_ = layout[layers - 1];
@@ -50,7 +50,7 @@ public:
 
   void Train();
 
-  void Compute(std::vector<double> &inputs);
+  std::vector<double> &Compute(std::vector<double> &inputs);
 
   void SaveNetworkWeights(const std::string &path);
 

@@ -70,10 +70,11 @@ void Layer::Delta(std::vector<double> &output, DeltaMode mode) {
 }
 
 void Layer::Descent(const std::vector<double> &inputs, double learningRate) {
-  for (int i = 0; i < outputCount_; i++) {
+  for (int i = 0; i < outputCount_; i++)
     biases_[i] += deltas_[i] * learningRate;
-    for (int j = 0; j < inputCount_; j++) {
-      weights_[j * outputCount_ + i] += inputs[j] * deltas_[i] * learningRate;
+  for (int i = 0; i < inputCount_; i++) {
+    for (int j = 0; j < outputCount_; j++) {
+      weights_[i * outputCount_ + j] += inputs[i] * deltas_[j] * learningRate;
     }
   }
 }
