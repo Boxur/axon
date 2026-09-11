@@ -1,5 +1,5 @@
-#include "network.hpp"
-#include "logger.hpp"
+#include "axon/network.hpp"
+#include "lg/logger.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <vector>
@@ -24,7 +24,7 @@ void Network::Train(int epochs) {
 void Network::Train() {
   precission_ = TestNetwork_();
 
-  logger::Logger::Log(std::to_string(precission_));
+  lg::log(std::to_string(precission_));
   std::vector<double> inputs(biggestLayer_);
   std::vector<double> outputs(biggestLayer_);
   data_->LoadTrainingData();
@@ -80,8 +80,7 @@ std::vector<double> &Network::Compute(std::vector<double> &inputs) {
 void Network::Test() {
   double prec = TestNetwork_();
 
-  logger::Logger::Log(std::to_string(prec) + " " +
-                      std::to_string(learningRate_));
+  lg::log(std::to_string(prec) + " " + std::to_string(learningRate_));
 }
 
 void Network::SetLearningRate(double lr) { learningRate_ = lr; }
@@ -90,8 +89,7 @@ double Network::TestNetwork_() {
   std::vector<double> inputs(biggestLayer_);
   std::vector<double> outputs(biggestLayer_);
   if (!data_->LoadTestData())
-    logger::Logger::Log(logger::Logger::LogLevel::error,
-                        "Failed to load test data");
+    lg::log(lg::Log::LogLevel::error, "Failed to load test data");
   double error = 0;
   int i = 0;
   while (data_->GetNextTestData(inputs, outputs)) {

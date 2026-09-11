@@ -1,4 +1,4 @@
-#include "layer.hpp"
+#include "axon/layer.hpp"
 #include <cassert>
 #include <functional>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "network_data.hpp"
+#include "axon/network_data.hpp"
 #include <fstream>
 #include <functional>
 #include <stdlib.h>

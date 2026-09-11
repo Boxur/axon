@@ -1,6 +1,6 @@
-#include "logger.hpp"
+#include "axon/network.hpp"
+#include "lg/logger.hpp"
 #include "mnist_data.hpp"
-#include "network.hpp"
 #include <memory>
 #include <unistd.h>
 
@@ -9,8 +9,8 @@ int main() {
   axon::Network network(0.000001f);
   network.Data<MnistData>();
   network.LoadNetworkWeights("Assets/network.nn");
-  logger::Logger::SetLogLevel((short)logger::Logger::LogLevel::error |
-                              (short)logger::Logger::LogLevel::info);
+  lg::log.SetLevel((short)lg::Log::LogLevel::error |
+                   (short)lg::Log::LogLevel::info);
   network.Train(10);
   network.Test();
   network.SaveNetworkWeights("Assets/network.nn");

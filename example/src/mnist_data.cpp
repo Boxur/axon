@@ -1,5 +1,5 @@
 #include "mnist_data.hpp"
-#include "logger.hpp"
+#include "lg/logger.hpp"
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -43,11 +43,9 @@ bool MnistData::GetNextTrainingData(std::vector<double> &inputs,
     return false;
   }
   if (inputs.size() < 784)
-    logger::Logger::Log(logger::Logger::LogLevel::error,
-                        "The input vector is too small");
+    lg::log(lg::Log::LogLevel::error, "The input vector is too small");
   if (outputs.size() < 11)
-    logger::Logger::Log(logger::Logger::LogLevel::error,
-                        "The output vector is too small");
+    lg::log(lg::Log::LogLevel::error, "The output vector is too small");
   if (rand() % 15 == 0) {
     for (int i = 0; i < 784; i++) {
       inputs[i] = (double)(rand() % 256) / 255.0;

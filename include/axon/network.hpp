@@ -1,6 +1,6 @@
 #pragma once
-#include "layer.hpp"
-#include "network_data.hpp"
+#include "axon/layer.hpp"
+#include "axon/network_data.hpp"
 
 #include <algorithm>
 #include <assert.h>
