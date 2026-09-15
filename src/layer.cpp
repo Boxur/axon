@@ -99,5 +99,5 @@ void Layer::LoadLayer(std::fstream &file) {
             outputCount_ * sizeof(double));
 }
 
-std::vector<double> &Layer::GetOutputs() { return outputs_; }
+const std::vector<double> &Layer::GetOutputs() { return outputs_; }
 } // namespace axon

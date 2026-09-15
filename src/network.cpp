@@ -1,7 +1,7 @@
 #include "axon/network.hpp"
 #include "lg/logger.hpp"
-#include <cstdlib>
 #include <iostream>
+#include <print>
 #include <vector>
 
 namespace axon {
@@ -66,15 +66,16 @@ bool Network::LoadNetworkWeights(const std::string &path) {
 
 void Network::Train_(std::vector<double> &inputs,
                      std::vector<double> &outputs) {
-  Compute(inputs);
+  inputs = Compute(inputs);
   Backpropagation_(inputs, outputs);
 }
 
-std::vector<double> &Network::Compute(std::vector<double> &inputs) {
+std::vector<double> Network::Compute(const std::vector<double> &inputs) {
+  std::vector<double> outputs = inputs;
   for (int j = 0; j < layerCount_; j++) {
-    inputs = layers_[j].Compute(inputs);
+    outputs = layers_[j].Compute(outputs);
   }
-  return inputs;
+  return outputs;
 }
 
 void Network::Test() {
@@ -86,8 +87,8 @@ void Network::Test() {
 void Network::SetLearningRate(double lr) { learningRate_ = lr; }
 
 double Network::TestNetwork_() {
-  std::vector<double> inputs(biggestLayer_);
-  std::vector<double> outputs(biggestLayer_);
+  std::vector<double> inputs(inputCount_);
+  std::vector<double> outputs(outputCount_);
   if (!data_->LoadTestData())
     lg::log(lg::Log::LogLevel::error, "Failed to load test data");
   double error = 0;
